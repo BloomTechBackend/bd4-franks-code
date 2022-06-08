@@ -54,11 +54,11 @@ public class GetInvitesForMemberActivity {
 
         // create a list of eventIds from the invitations for a member
         List<String> eventIds = new ArrayList<>(); // hold the eventids the member is invited to
-        for (Invite anInvite : invites) {
-            eventIds.add(anInvite.getEventId());
+        for (Invite anInvite : invites) {           // Loop through the invitations for the memeber
+            eventIds.add(anInvite.getEventId());    // Add the eventId from invitation to list of eventIds
         }
 
-        // Find all the Events that the member is invited to
+        // Find all the Events that the member is invited to using the list of eventIds created above
         List<Event> events = eventDao.getEvents(eventIds);
 
         // Go through the list of events for the member
@@ -67,21 +67,23 @@ public class GetInvitesForMemberActivity {
         //                           add a CancelledInvite to the list of invitations for the member
 
         // Store Events for the member in a Map so we can access by eventID
+        //   Key   - eventId
+        //   Value - The Event
         Map<String, Event> eventLookup = new HashMap<>();
-        for(Event anEvent : events) {
-            eventLookup.put(anEvent.getId(), anEvent);
+        for(Event anEvent : events) {                   // Loop through the events for the member
+            eventLookup.put(anEvent.getId(), anEvent);  // Add the event to Map with the eventID as the key
         }
 
         // Go through list of Invites for member
-        //    1. Find matching event in lookup map.
+        //    1. Find matching event in lookup Map.
         //    2. If Event is cancelled:
         //       a. Mark invitation as cancelled in the database
         //       b. Remove the Invite from the list of Invites for the member
         //       c  Add a CancelledInvite to the list of Invites for the member
 
         // Since we are removing and adding entries from the List as we go through it
-        //       Use an Iterator to go through the list of invitations
-        ListIterator<Invite> inviteIterator = invites.listIterator();
+        //       Use an Iterator to go through the list of invitations to avoid ConcurrentModificationException
+        ListIterator<Invite> inviteIterator = invites.listIterator();   // Simple Iterator is OK too
 
         while(inviteIterator.hasNext()) {  // Go through list of Invites for member
             Invite currentInvite = inviteIterator.next();                 // Retrieve the next Invite from the list

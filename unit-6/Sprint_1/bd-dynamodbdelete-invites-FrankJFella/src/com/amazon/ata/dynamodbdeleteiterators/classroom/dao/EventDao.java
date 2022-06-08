@@ -83,12 +83,14 @@ public class EventDao {
      */
     public Event cancelEvent(String eventId) {
         // PARTICIPANTS: replace this implementation to perform a soft delete
+        // Original code that does a hard delete - removed from database
         //Event canceledEvent = new Event();
         //canceledEvent.setId(eventId);
         //mapper.delete(canceledEvent);
         //return null;
 
         // PARTICIPANTS: replace this implementation to perform a soft delete
+        // Soft delete means set an attribute for the table entry to indicate it is inactive
         Event canceledEvent = this.getEvent(eventId);  // Get the Event from the database
                                                        //     using this DAO's getEvent()
                                                        // this. is optional
